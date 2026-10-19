@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="sk" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Makroekonomika jednoducho</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root,:root[data-theme="light"]{--bg:#FBF1E1;--ink:#3B2314;--card:#FFFAF0;--a1:#E8833A;--a2:#F2B84B;--a3:#A9B36A;--a4:#C65D3B;--onc:#2B1608;--tbg:#E8833A;--tfg:#2B1608;--dbg:#3B2314;--dfg:#FBF1E1;--l1:#A9B36A;--l2:#C65D3B;--bw:3px}
+:root[data-theme="dark"]{--bg:#2A1A10;--ink:#FBE9D0;--card:#4A2E1D;--a1:#E8833A;--a2:#F2B84B;--a3:#A9B36A;--a4:#D9714C;--onc:#2B1608;--tbg:#4A2E1D;--tfg:#FBE9D0;--dbg:#150C06;--dfg:#FBE9D0;--l1:#A9B36A;--l2:#D9714C;--bw:3px}
+:root[data-theme="contrast"]{--bg:#FFFFFF;--ink:#000000;--card:#FFFFFF;--a1:#FF9A3D;--a2:#FFD23F;--a3:#B7D04A;--a4:#FF8A66;--onc:#000000;--tbg:#FFD23F;--tfg:#000000;--dbg:#000000;--dfg:#FFFFFF;--l1:#5E7A00;--l2:#B21F00;--bw:5px}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:'Bricolage Grotesque',system-ui,sans-serif;background:var(--bg);color:var(--ink);overflow:hidden}
+.slide{position:absolute;inset:0;display:none;padding:10vh 7vw 12vh;flex-direction:column;justify-content:center;gap:2.4vh;overflow:auto}
+.slide.on{display:flex}
+h1{font-size:clamp(2.6rem,8vw,6.5rem);font-weight:800;line-height:1;letter-spacing:-.03em}
+h2{font-size:clamp(1.8rem,4vw,3.2rem);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+p,li{font-size:clamp(1.1rem,1.7vw,1.4rem);line-height:1.4;max-width:60ch}
+.grid{display:grid;gap:1.6vw;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{border-radius:22px;padding:2.2vh 1.5vw;background:var(--card);border:var(--bw) solid var(--ink)}
+.card h3{font-size:clamp(1.2rem,2vw,1.7rem);margin-bottom:.6vh}
+.card p{font-size:clamp(1.05rem,1.45vw,1.25rem)}
+.c1,.c2,.c3,.c4{color:var(--onc);border-color:var(--onc)}
+:root[data-theme="dark"] .c1,:root[data-theme="dark"] .c2,:root[data-theme="dark"] .c3,:root[data-theme="dark"] .c4{border-color:var(--ink)}
+.c1{background:var(--a1)}.c2{background:var(--a2)}.c3{background:var(--a3)}.c4{background:var(--a4)}
+.big{font-size:clamp(2.2rem,5vw,4rem);font-weight:800;line-height:1.05}
+.f{font-size:clamp(1.05rem,1.6vw,1.35rem);font-weight:600}
+.title{background:var(--tbg);color:var(--tfg)}
+.title p{font-size:clamp(1.3rem,2.4vw,2rem);max-width:30ch;font-weight:600}
+.blob{position:absolute;border-radius:50%;z-index:0}
+.slide>*{position:relative;z-index:1}
+.dark{background:var(--dbg);color:var(--dfg)}
+.ban{border-radius:18px;padding:1.6vh 1.6vw;background:var(--dbg);color:var(--dfg);font-weight:800;font-size:clamp(1.15rem,2vw,1.7rem);border:var(--bw) solid var(--ink)}
+.arr{align-self:center;font-size:2rem;font-weight:800}
+.steps{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:1vw;align-items:stretch}
+.tbl{display:grid;grid-template-columns:auto 1fr 1fr;gap:1.2vw;align-items:stretch}
+.tbl .hc{text-align:center;justify-self:center}.tbl .h{font-weight:800;align-self:center;font-size:clamp(1rem,1.6vw,1.3rem)}
+.hatch{border-radius:22px;border:var(--bw) dashed var(--ink);background:repeating-linear-gradient(45deg,transparent 0 10px,rgba(128,128,128,.25) 10px 12px)}
+.meter{height:3.4vh;min-height:26px;border-radius:99px;border:var(--bw) solid var(--ink);background:var(--card);overflow:hidden}
+.meter i{display:block;height:100%;width:75%;background:var(--a1)}
+.rf{fill:none;stroke:var(--dfg);stroke-width:2;opacity:.6}
+.rd{fill:var(--a1);fill-opacity:.7;stroke:var(--a2);stroke-width:4}
+.rt{fill:var(--dfg);font-weight:700;font-size:15px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:3vw;align-items:center}
+.two svg{width:100%;max-height:52vh}
+.bar{position:fixed;left:0;bottom:0;height:8px;background:var(--a4);transition:width .3s;z-index:5}
+.nav{position:fixed;right:3vw;bottom:2.5vh;display:flex;gap:10px;z-index:5;align-items:center;color:var(--ink)}
+.nav.ond{color:var(--dfg)}
+.nav span{font-weight:600}
+.nav button{width:48px;height:48px;border-radius:50%;border:var(--bw) solid var(--ink);background:var(--a2);color:var(--onc);font-size:1.3rem;cursor:pointer;font-family:inherit}
+.nav.ond button{border-color:var(--dfg)}
+.nav button:hover{background:var(--a1)}
+.theme{position:fixed;top:calc(2vh + env(safe-area-inset-top,0px));right:3vw;z-index:6;display:flex;border:var(--bw) solid var(--ink);border-radius:99px;overflow:hidden;background:var(--card)}
+.theme button{font:inherit;font-weight:600;font-size:clamp(.85rem,1.2vw,1.05rem);padding:.55em 1em;border:0;background:transparent;color:var(--ink);cursor:pointer;white-space:nowrap}
+.theme button[aria-pressed="true"]{background:var(--a2);color:var(--onc)}
+.theme button:hover{text-decoration:underline}
+:root[data-theme="dark"] .theme button[aria-pressed="true"]{background:var(--a1)}
+:focus-visible{outline:4px solid var(--a4);outline-offset:3px}
+:root[data-theme="contrast"] :focus-visible{outline-color:#000}
+@media(max-width:800px){.two,.steps,.tbl{grid-template-columns:1fr}.slide{justify-content:flex-start}.theme button span{display:none}.arr{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+<div class="theme" role="group" aria-label="Farebná téma (kláves T)">
+  <button data-t="light" aria-pressed="true">&#9728; <span>Svetlá</span></button>
+  <button data-t="dark" aria-pressed="false">&#9790; <span>Tmavá</span></button>
+  <button data-t="contrast" aria-pressed="false">&#9680; <span>Kontrast</span></button>
+</div>
+
+<section class="slide on title">
+  <div class="blob" style="width:42vw;height:42vw;background:var(--a2);right:-8vw;top:-10vw;opacity:.9"></div>
+  <div class="blob" style="width:22vw;height:22vw;background:var(--a4);right:14vw;bottom:-6vw"></div>
+  <h1>Darí sa krajine?</h1>
+  <p>Makroekonomické ukazovatele vysvetlené jednoducho</p>
+</section>
+
+<section class="slide">
+  <h2>Predstav si, že si šéf krajiny</h2>
+  <p>Ako zistíš, či sa krajine darí? Nestačí hádať, potrebuješ čísla. Tu sú štyri najdôležitejšie.</p>
+  <div class="grid">
+    <div class="card c1"><h3>🏭 HDP</h3><p>Koľko vecí a služieb krajina vyrobí.</p></div>
+    <div class="card c3"><h3>👛 HNP / HND</h3><p>Koľko z toho si naozaj zarobia obyvatelia.</p></div>
+    <div class="card c2"><h3>🏷️ Inflácia</h3><p>O koľko zdražujú veci.</p></div>
+    <div class="card c4"><h3>👷 Nezamestnanosť</h3><p>Koľko ľudí chce pracovať, ale nemá prácu.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>HDP: koľko krajina vyrobí za rok</h2>
+  <p>Hrubý domáci produkt je hodnota všetkých vecí a služieb, ktoré sa v krajine za jeden rok vyrobia. Počítame podľa dvoch pravidiel:</p>
+  <div class="grid">
+    <div class="card c3"><h3>1. Kde? Doma</h3><p>Rátame všetko, čo sa vyrobí na Slovensku. Aj keď továreň patrí cudzincovi.</p></div>
+    <div class="card c2"><h3>2. Čo? Finálny produkt</h3><p>Rátame hotové auto, nie každú skrutku zvlášť. Inak by sme jednu vec počítali viackrát.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>Prečo nepočítame všetko dvakrát?</h2>
+  <p>Predstav si pekára. Počítame len to, čo <b>pridal svojou prácou</b>. Tomu sa hovorí pridaná hodnota.</p>
+  <div class="steps">
+    <div class="card"><h3>🌾 Nakúpi múku a energiu</h3><p class="big">6 000 €</p><p>Toto už raz niekto napočítal.</p></div>
+    <div class="arr" aria-hidden="true">&rarr;</div>
+    <div class="card"><h3>🍞 Upečie chlieb</h3><p class="big">10 000 €</p><p>Za toľko ho predá.</p></div>
+    <div class="arr" aria-hidden="true">&rarr;</div>
+    <div class="card c3"><h3>✨ Pekár pridal</h3><p class="big">4 000 €</p><p>10 000 − 6 000. Len toto ide do HDP.</p></div>
+  </div>
+  <div class="ban">Keby sme rátali múku aj chlieb, vyzeralo by to, že krajina vyrobila viac, než vyrobila.</div>
+</section>
+
+<section class="slide">
+  <h2>Tri cesty k rovnakému číslu</h2>
+  <p>HDP sa dá zistiť tromi spôsobmi. Je to ako pozerať na ten istý dom z troch strán. Výsledok je rovnaký.</p>
+  <div class="grid">
+    <div class="card c1"><h3>🛒 Výdavková metóda</h3><p class="f">HDP = Spotreba + Investície + Vláda + Čistý export<br>(HDP = C + I + G + NX)</p></div>
+    <div class="card c3"><h3>🏗️ Produkčná metóda</h3><p class="f">HDP = Hrubá produkcia − Medzispotreba</p></div>
+    <div class="card c2"><h3>💶 Dôchodková metóda</h3><p class="f">HDP = W + R + i + P + T − S</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>Nominálny vs. reálny HDP</h2>
+  <p>Pizza stála minulý rok 5 €, teraz 10 €. Predali sme rovnaký počet pízz, ale vyzeráme dvakrát bohatší. To je klam.</p>
+  <div class="grid">
+    <div class="card c4"><h3>🎈 Nominálny HDP</h3><p>Počíta v dnešných cenách. Môže rásť len preto, že všetko zdražie, teda kvôli inflácii.</p></div>
+    <div class="card c3"><h3>🧊 Reálny HDP</h3><p>Očistený o infláciu, vyjadruje skutočný objem fyzickej produkcie.</p></div>
+  </div>
+  <div class="ban">Dobrý šéf krajiny sleduje vždy reálny HDP.</div>
+</section>
+
+<section class="slide">
+  <h2>HDP vs. HNP: kde a kto</h2>
+  <p>HDP pýta „<b>kde</b> sa to vyrobilo?“, HNP pýta „<b>kto</b> to vyrobil?“.</p>
+  <div class="tbl">
+    <div></div><div class="h hc">Na Slovensku</div><div class="h hc">V zahraničí</div>
+    <div class="h">Slovák</div>
+    <div class="card c3"><h3>🥖 Pekáreň v Nitre</h3><p><b>Ide do HDP aj HNP.</b></p></div>
+    <div class="card c2"><h3>💼 Slovák robí v rakúskej firme</h3><p><b>Ide len do HNP.</b></p></div>
+    <div class="h">Cudzinec</div>
+    <div class="card c1"><h3>🚗 Nemecká automobilka v Bratislave</h3><p><b>Ide len do HDP.</b> Zisk patrí Nemcom.</p></div>
+    <div class="hatch" role="img" aria-label="Prázdne políčko"></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>Prečo nezarobíme všetko, čo vyrobíme?</h2>
+  <p>Predstav si, že u nás stojí veľká cudzia továreň. Vyrába u nás, ale zisk si odnesie domov.</p>
+  <div class="steps">
+    <div class="card c3"><h3>⬅️ Prílev</h3><p>Peniaze, ktoré Slováci zarobia v zahraničí.</p></div>
+    <div class="arr" aria-hidden="true">&rarr;</div>
+    <div class="card"><h3>🇸🇰 Slovenské HDP</h3><p>Všetko, čo sa vyrobí u nás.</p></div>
+    <div class="arr" aria-hidden="true">&rarr;</div>
+    <div class="card c4"><h3>➡️ Odlev</h3><p>Zisky zahraničných firiem idú k nim domov.</p></div>
+  </div>
+  <div class="ban">HND ukazuje, čo zostane nám. Pre zahraničné fabriky je naše HDP výrazne vyššie než HND.</div>
+</section>
+
+<section class="slide">
+  <h2>Ako férovo porovnať dve krajiny?</h2>
+  <p>Nemecko má väčšie HDP už len preto, že tam žije oveľa viac ľudí. Takže porovnávať treba inak.</p>
+  <div class="grid">
+    <div class="card c2"><h3>👤 HDP na obyvateľa</h3><p>Vydelíme HDP počtom ľudí. Teda koľko vychádza na jedného.</p></div>
+    <div class="card c3"><h3>🥐 Parita kúpnej sily</h3><p>Za 1 000 € si v Bratislave kúpiš iné množstvo vecí ako v Mníchove. Parita to vyrovná.</p></div>
+  </div>
+  <p class="f">Životná úroveň Slovenska v roku 2025: 75 % priemeru EÚ (sme o štvrtinu nižšie).</p>
+  <div class="meter" role="img" aria-label="75 percent priemeru EÚ"><i></i></div>
+</section>
+
+<section class="slide">
+  <h2>Slovensko v číslach (2025/2026)</h2>
+  <div class="grid">
+    <div class="card c1"><h3>Veľkosť ekonomiky (2025)</h3><p class="big">104,5 mld. €</p><p>Reálny HDP.</p></div>
+    <div class="card c3"><h3>Rast za rok (2025)</h3><p class="big">+0,8 %</p><p>Rastieme, ale pomaly.</p></div>
+    <div class="card c2"><h3>Najnovšie (2Q 2026)</h3><p class="big">+0,7 %</p><p>Stále mierny rast.</p></div>
+    <div class="card c4"><h3>Priemer EÚ (2025)</h3><p class="big">41 570 €</p><p>HDP na obyvateľa v bežných cenách.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>Ďalšie makroekonomické ukazovatele</h2>
+  <div class="grid">
+    <div class="card c2"><h3>🏷️ Inflácia</h3><p>Ceny všeobecne rastú. Za 1 € si kúpiš menej rožkov ako vlani.</p></div>
+    <div class="card c3"><h3>👷 Nezamestnanosť</h3><p>Zo 100 ľudí, ktorí chcú pracovať, nemá prácu napríklad 5. Je to 5 %.</p></div>
+    <div class="card c1"><h3>⏱️ Produktivita práce</h3><p>Koľko vyrobí jeden človek za hodinu alebo za deň.</p></div>
+    <div class="card c4"><h3>🚢 Obchodná bilancia</h3><p>Koľko sme predali do sveta (export) mínus koľko sme nakúpili (import).</p></div>
+  </div>
+</section>
+
+<section class="slide dark">
+  <h2>HDP nie je to isté ako kvalitný život</h2>
+  <p>HDP výborne meria, koľko sa vyrobilo. Nevie ale nič o tom, ako sa ľuďom žije.</p>
+  <div class="two">
+    <svg viewBox="0 0 400 320" role="img" aria-label="Rádarový graf: HDP vysoké, ostatné faktory nízke">
+      <polygon class="rf" points="200,30 330,125 280,270 120,270 70,125"/>
+      <polygon class="rf" points="200,90 270,140 245,215 155,215 130,140"/>
+      <polygon class="rd" points="200,30 225,150 215,200 175,175 150,150"/>
+      <text class="rt" x="200" y="20" text-anchor="middle">HDP</text>
+      <text class="rt" x="335" y="125">Zdravie</text>
+      <text class="rt" x="285" y="292" text-anchor="middle">Voľný čas</text>
+      <text class="rt" x="115" y="292" text-anchor="middle">Čisté prostredie</text>
+      <text class="rt" x="65" y="125" text-anchor="end">Rovnosť</text>
+    </svg>
+    <div class="grid" style="grid-template-columns:1fr">
+      <div class="card c2"><p><b>Neplatená práca:</b> keď mama varí alebo sa stará o deti, do HDP sa nepočíta.</p></div>
+      <div class="card c3"><p><b>Zdravie a čas:</b> keď ľudia robia 16 hodín denne, HDP rastie, ale sú vyčerpaní.</p></div>
+      <div class="card c1"><p><b>Príroda:</b> továreň znečistí rieku, HDP vzrastie, ale život sa zhorší.</p></div>
+      <div class="card c4"><p><b>Spravodlivosť:</b> HDP nepovie, či bohatnú všetci, alebo len pár ľudí.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="bar" id="bar"></div>
+<div class="nav" id="nav">
+  <span id="count"></span>
+  <button id="prev" aria-label="Predchádzajúci slajd">&#8592;</button>
+  <button id="next" aria-label="Ďalší slajd">&#8594;</button>
+</div>
+
+<script>
+const s=[...document.querySelectorAll('.slide')];let i=0;
+const nav=document.getElementById('nav');
+function go(n){i=Math.max(0,Math.min(s.length-1,n));s.forEach((e,k)=>e.classList.toggle('on',k===i));
+document.getElementById('bar').style.width=((i+1)/s.length*100)+'%';
+document.getElementById('count').textContent=(i+1)+' / '+s.length;
+nav.classList.toggle('ond',s[i].classList.contains('dark'));}
+document.getElementById('next').onclick=()=>go(i+1);
+document.getElementById('prev').onclick=()=>go(i-1);
+const themes=['light','dark','contrast'];
+const tb=[...document.querySelectorAll('.theme button')];
+function setTheme(t){document.documentElement.dataset.theme=t;
+tb.forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));
+try{localStorage.setItem('makro-easy-theme',t)}catch(e){}}
+tb.forEach(b=>b.onclick=()=>setTheme(b.dataset.t));
+let saved;try{saved=localStorage.getItem('makro-easy-theme')}catch(e){}
+setTheme(themes.includes(saved)?saved:'light');
+addEventListener('keydown',e=>{
+if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(i+1)}
+if(['ArrowLeft','PageUp'].includes(e.key))go(i-1);
+if(e.key==='t'||e.key==='T'){setTheme(themes[(themes.indexOf(document.documentElement.dataset.theme)+1)%3])}});
+go(0);
+</script>
+</body>
+</html>
